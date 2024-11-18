@@ -18,12 +18,18 @@
         }
         .container {
             display: flex;
+            flex-direction: column;
             max-width: 900px;
             background: white;
             padding: 20px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
             width: 100%;
+        }
+        .content {
+            display: flex;
+            width: 100%;
+            margin-bottom: 20px;
         }
         .inputs {
             flex: 2;
@@ -82,32 +88,48 @@
         .result p {
             margin: 5px 0;
         }
+        .disclaimer {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #555;
+            background: #f9f9f9;
+            padding: 10px;
+            border-left: 4px solid #63B2E5;
+        }
+        .disclaimer p {
+            margin: 0;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="inputs">
-            <h2>Lead Generation Calculator</h2>
-            <p>Enter any two values to calculate the third:</p>
-            <div class="form-group">
-                <label for="dailySpend">Daily Ad Spend ($):</label>
-                <input type="number" id="dailySpend" placeholder="Enter daily ad spend">
+        <div class="content">
+            <div class="inputs">
+                <h2>Lead Generation Calculator</h2>
+                <p>Enter any two values to calculate the third:</p>
+                <div class="form-group">
+                    <label for="dailySpend">Daily Ad Spend ($):</label>
+                    <input type="number" id="dailySpend" placeholder="Enter daily ad spend">
+                </div>
+                <div class="form-group">
+                    <label for="costPerLead">Average Cost Per Lead ($):</label>
+                    <input type="number" id="costPerLead" placeholder="Enter average cost per lead">
+                </div>
+                <div class="form-group">
+                    <label for="monthlyLeads">Expected Leads Per Month:</label>
+                    <input type="number" id="monthlyLeads" placeholder="Enter expected monthly leads">
+                </div>
+                <button onclick="calculate()">Calculate</button>
             </div>
-            <div class="form-group">
-                <label for="costPerLead">Average Cost Per Lead ($):</label>
-                <input type="number" id="costPerLead" placeholder="Enter average cost per lead">
+            <div class="outputs">
+                <div class="output-title">Estimates</div>
+                <div class="result" id="result">
+                    <p>No results yet.</p>
+                </div>
             </div>
-            <div class="form-group">
-                <label for="monthlyLeads">Expected Leads Per Month:</label>
-                <input type="number" id="monthlyLeads" placeholder="Enter expected monthly leads">
-            </div>
-            <button onclick="calculate()">Calculate</button>
         </div>
-        <div class="outputs">
-            <div class="output-title">Estimates</div>
-            <div class="result" id="result">
-                <p>No results yet.</p>
-            </div>
+        <div class="disclaimer">
+            <p><strong>Disclaimer:</strong> The estimates provided by this calculator are for informational purposes only and should not be considered as financial or professional advice. Actual results may vary based on factors outside the scope of this tool, including changes in advertising performance, audience behavior, and external costs. We do not guarantee the accuracy or completeness of the results. Please consult with a marketing or financial professional for tailored advice specific to your business.</p>
         </div>
     </div>
 
