@@ -9,24 +9,37 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: transparent; /* Transparent for iframe embedding */
+            background-color: #f9f9f9;
             color: #333;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100%;
+            height: 100vh;
         }
         .container {
-            max-width: 600px;
+            display: flex;
+            max-width: 900px;
             background: white;
-            padding: 20px 30px;
+            padding: 20px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
-            text-align: center;
-            border-top: 6px solid #63B2E5; /* Accent blue from the logo */
+            width: 100%;
+        }
+        .inputs {
+            flex: 2;
+            margin-right: 20px;
+        }
+        .outputs {
+            flex: 1;
+            background: #f1f1f1;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: left;
+            font-size: 18px;
+            font-weight: bold;
         }
         h2 {
-            color: #63B2E5; /* Primary blue from the logo */
+            color: #63B2E5;
             margin-bottom: 10px;
         }
         .form-group {
@@ -37,7 +50,7 @@
             display: block;
             margin-bottom: 5px;
             font-weight: bold;
-            color: #555; /* Neutral secondary gray */
+            color: #555;
         }
         input[type="number"] {
             width: 100%;
@@ -51,42 +64,51 @@
             display: inline-block;
             padding: 12px 20px;
             margin-top: 15px;
-            background-color: #63B2E5; /* Primary blue */
-            color: white; /* Accent */
+            background-color: #63B2E5;
+            color: white;
             border: none;
             border-radius: 4px;
             cursor: pointer;
             font-size: 16px;
         }
         button:hover {
-            background-color: #5198C6; /* Darker blue for hover effect */
+            background-color: #5198C6;
         }
-        .result {
-            margin-top: 20px;
-            font-weight: bold;
-            color: #333; /* Neutral text color */
-            text-align: left;
+        .output-title {
+            margin-bottom: 10px;
+            font-size: 20px;
+            color: #333;
+        }
+        .result p {
+            margin: 5px 0;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h2>Lead Generation Estimator</h2>
-        <p>Enter any two values to calculate the third:</p>
-        <div class="form-group">
-            <label for="dailySpend">Daily Ad Spend ($):</label>
-            <input type="number" id="dailySpend" placeholder="Enter daily ad spend">
+        <div class="inputs">
+            <h2>Lead Generation Calculator</h2>
+            <p>Enter any two values to calculate the third:</p>
+            <div class="form-group">
+                <label for="dailySpend">Daily Ad Spend ($):</label>
+                <input type="number" id="dailySpend" placeholder="Enter daily ad spend">
+            </div>
+            <div class="form-group">
+                <label for="costPerLead">Average Cost Per Lead ($):</label>
+                <input type="number" id="costPerLead" placeholder="Enter average cost per lead">
+            </div>
+            <div class="form-group">
+                <label for="monthlyLeads">Expected Leads Per Month:</label>
+                <input type="number" id="monthlyLeads" placeholder="Enter expected monthly leads">
+            </div>
+            <button onclick="calculate()">Calculate</button>
         </div>
-        <div class="form-group">
-            <label for="costPerLead">Average Cost Per Lead ($):</label>
-            <input type="number" id="costPerLead" placeholder="Enter average cost per lead">
+        <div class="outputs">
+            <div class="output-title">Estimates</div>
+            <div class="result" id="result">
+                <p>No results yet.</p>
+            </div>
         </div>
-        <div class="form-group">
-            <label for="monthlyLeads">Expected Leads Per Month:</label>
-            <input type="number" id="monthlyLeads" placeholder="Enter expected monthly leads">
-        </div>
-        <button onclick="calculate()">Calculate</button>
-        <div class="result" id="result"></div>
     </div>
 
     <script>
@@ -96,11 +118,11 @@
             const monthlyLeads = parseFloat(document.getElementById("monthlyLeads").value);
 
             const result = document.getElementById("result");
-            result.textContent = ""; // Clear previous results
+            result.innerHTML = ""; // Clear previous results
 
-            // Check for negative inputs
+            // Validate inputs
             if ((dailySpend < 0 || costPerLead < 0 || monthlyLeads < 0)) {
-                result.textContent = "Values cannot be negative. Please enter positive numbers.";
+                result.innerHTML = "<p>Values cannot be negative. Please enter positive numbers.</p>";
                 return;
             }
 
@@ -116,20 +138,20 @@
 
             // Case 2: Calculate Cost Per Lead
             if (!costPerLead && monthlySpend && monthlyLeads) {
-                const cpl = Math.floor(monthlySpend / monthlyLeads); // Whole number
-                result.textContent = `Average Cost Per Lead: $${cpl}`;
+                const cpl = monthlySpend / monthlyLeads; // Full calculation
+                result.innerHTML = `<p>Average Cost Per Lead: $${cpl.toFixed(2)}</p>`;
                 return;
             }
 
             // Case 3: Calculate Daily Spend
             if (!dailySpend && costPerLead && monthlyLeads) {
                 const calculatedMonthlySpend = monthlyLeads * costPerLead;
-                const dailySpendCalc = Math.floor(calculatedMonthlySpend / 30); // Whole number
-                result.textContent = `Daily Spend: $${dailySpendCalc}`;
+                const dailySpendCalc = calculatedMonthlySpend / 30; // Full calculation
+                result.innerHTML = `<p>Daily Spend: $${dailySpendCalc.toFixed(2)}</p>`;
                 return;
             }
 
-            result.textContent = "Please provide at least two values to calculate the third.";
+            result.innerHTML = "<p>Please provide at least two values to calculate the third.</p>";
         }
 
         function displayResults(monthlyLeads) {
