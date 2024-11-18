@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lead Generation Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: transparent; /* Transparent for iframe embedding */
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+        }
+        .container {
+            max-width: 600px;
+            background: white;
+            padding: 20px 30px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            text-align: center;
+            border-top: 6px solid #63B2E5; /* Accent blue from the logo */
+        }
+        h2 {
+            color: #63B2E5; /* Primary blue from the logo */
+            margin-bottom: 10px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555; /* Neutral secondary gray */
+        }
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            display: inline-block;
+            padding: 12px 20px;
+            margin-top: 15px;
+            background-color: #63B2E5; /* Primary blue */
+            color: white; /* Accent */
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #5198C6; /* Darker blue for hover effect */
+        }
+        .result {
+            margin-top: 20px;
+            font-weight: bold;
+            color: #333; /* Neutral text color */
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Lead Generation Estimator</h2>
+        <p>Enter any two values to calculate the third:</p>
+        <div class="form-group">
+            <label for="dailySpend">Daily Ad Spend ($):</label>
+            <input type="number" id="dailySpend" placeholder="Enter daily ad spend">
+        </div>
+        <div class="form-group">
+            <label for="costPerLead">Average Cost Per Lead ($):</label>
+            <input type="number" id="costPerLead" placeholder="Enter average cost per lead">
+        </div>
+        <div class="form-group">
+            <label for="monthlyLeads">Expected Leads Per Month:</label>
+            <input type="number" id="monthlyLeads" placeholder="Enter expected monthly leads">
+        </div>
+        <button onclick="calculate()">Calculate</button>
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        function calculate() {
+            const dailySpend = parseFloat(document.getElementById("dailySpend").value);
+            const costPerLead = parseFloat(document.getElementById("costPerLead").value);
+            const monthlyLeads = parseFloat(document.getElementById("monthlyLeads").value);
+
+            const result = document.getElementById("result");
+            result.textContent = ""; // Clear previous results
+
+            // Check for negative inputs
+            if ((dailySpend < 0 || costPerLead < 0 || monthlyLeads < 0)) {
+                result.textContent = "Values cannot be negative. Please enter positive numbers.";
+                return;
+            }
+
+            // Monthly Ad Spend = Daily Spend * 30
+            const monthlySpend = dailySpend ? dailySpend * 30 : null;
+
+            // Case 1: Calculate Monthly Leads
+            if (!monthlyLeads && monthlySpend && costPerLead) {
+                const leads = Math.floor(monthlySpend / costPerLead); // Whole number
+                displayResults(leads);
+                return;
+            }
+
+            // Case 2: Calculate Cost Per Lead
+            if (!costPerLead && monthlySpend && monthlyLeads) {
+                const cpl = Math.floor(monthlySpend / monthlyLeads); // Whole number
+                result.textContent = `Average Cost Per Lead: $${cpl}`;
+                return;
+            }
+
+            // Case 3: Calculate Daily Spend
+            if (!dailySpend && costPerLead && monthlyLeads) {
+                const calculatedMonthlySpend = monthlyLeads * costPerLead;
+                const dailySpendCalc = Math.floor(calculatedMonthlySpend / 30); // Whole number
+                result.textContent = `Daily Spend: $${dailySpendCalc}`;
+                return;
+            }
+
+            result.textContent = "Please provide at least two values to calculate the third.";
+        }
+
+        function displayResults(monthlyLeads) {
+            const weeklyLeads = Math.floor(monthlyLeads / 4.35); // Whole number
+            const dailyLeads = Math.floor(monthlyLeads / 30); // Whole number
+
+            const result = document.getElementById("result");
+            result.innerHTML = `
+                <p><strong>Expected Leads Per Month:</strong> ${monthlyLeads}</p>
+                <p><strong>Average Leads Per Week:</strong> ${weeklyLeads}</p>
+                <p><strong>Average Leads Per Day:</strong> ${dailyLeads}</p>
+            `;
+        }
+    </script>
+</body>
+</html>
